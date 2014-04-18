@@ -10,7 +10,7 @@
 #import "MCMap.h"
 #import "MCAnnotationView.h"
 
-typedef enum {displayNextLocation, zoomIn, zoomOut, moveStep, quickPause} stackCommands;  // in order to fire off events after completion of previous use a stack that is run by a recursive loop (otherwise end up with a mess of recursive calls or completion blocks, nested and branched)
+typedef enum {displayNextLocation, zoomIn, zoomOut, moveStep, quickPause} stackCommands;  // in order to fire off events after completion of previous use a stack  (otherwise end up with a mess of recursive calls or completion blocks, nested and branched)
 
 
 @interface MCMap ()

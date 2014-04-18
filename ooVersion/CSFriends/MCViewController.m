@@ -150,7 +150,6 @@
 // LITTLE THINGS:
 // can hit edit trip if nothing selected??
 // add exit button to detail page so don't have to scroll thru (or change the last "next" to exit)???
-// detail label names should be changed???
 // overlay didn't disappear when deleted tags (it is a caching thing or not called) or did when not supposed to??? ahhh
 // option for delete all pins for trip (vs just the label)?
 
@@ -204,9 +203,9 @@
     [mcInvocationQueue_toDoItems addSelectorToQueue:@selector(fadeMenus) fromController:self];
 
     [mcInvocationQueue_toDoItems addSelectorToQueue:@selector(northAmericaButtonPressed:) fromController:self parA:nil];
-      [mcInvocationQueue_toDoItems addPauseToQueue:1.5];
+    [mcInvocationQueue_toDoItems addPauseToQueue:1.5];
     [mcInvocationQueue_toDoItems addSelectorToQueue:@selector(europeButtonPressed:) fromController:self parA:nil];
-      [mcInvocationQueue_toDoItems addPauseToQueue:1.5];
+    [mcInvocationQueue_toDoItems addPauseToQueue:1.5];
 
     // upon completion of tour, load saved data and refresh
     [mcInvocationQueue_toDoItems addSelectorToQueue:@selector(loadData_fileNameForPinPlistData:fileNameForTagPlistData:) fromController:self parA:@"csfriends.plist" parB:@"listOfTags.plist"];
@@ -249,7 +248,7 @@
     [self checkToSeeIfNewDataAndImport];         // if new data to import, will present tag controller
     [self filterPinsAndDisplayMap];
     [self updateTableWhenMapRegionChanges];
-    [self makeMapPolygonForTags];                // better to move to finish setup, but would need to set up delegate method to call when leave tag view controller
+    [self makeMapPolygonForTags];                // better to move to finish setup, but would need to set up delegate method to call when leave tag view controller (or add to runQueue)
     [self displayTripLinesOverlay];
     [self makeScreenObjectsVisable];             // to avoid flicker, when updating
 }
@@ -485,7 +484,7 @@
     // when exit tagViewController, it will save the list of tags and run viewDidAppear
     //   which will rebuild everything else from the ground up
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Data Import Complete" message:@"Before returning to the main screen, select the tags you wish to view.\n\nPlease note that all imported locations have been given a tag showing you the date they were imported.  This alows you to easily locate your imported locations.  After you are done organizing your new locations, you may wish to delete the tag." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Data Import Complete" message:@"Before returning to the main screen, select the tags you wish to view.\n\nPlease note that all imported pins have been given a tag showing you the date they were imported.  This alows you to easily locate your imported pins.  After you are done organizing your new pins, you may wish to delete this tag." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
     [alert show];
     
     [self performSegueWithIdentifier:@"toSelectTagViewController" sender:filterByTagButton];
@@ -728,13 +727,13 @@
     
    // temporarily removed until issue fixed
     
-   // actionSheetPinOptions = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"MAP SELECTIONS:", @"Show name & photo.", @"Show red pin.",  @" ", @"SHARE LOCATIONS:", @"For Selected Tags", @"Selected Locations", @" ", @"About", nil];
+   // actionSheetPinOptions = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"MAP SELECTIONS:", @"Show name & photo.", @"Show red pin.",  @" ", @"SHARE PINS:", @"For Selected Tags", @"Selected Pins", @" ", @"About", nil];
 
    // removed MAP SELECTIONS: so always show red pin
    // to put functionality back in play, just un-comment-out above text
    // see known issues (top)
     
-    actionSheetPinOptions = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"SHARE LOCATIONS:", @"For Selected Tags", @"Selected Locations", @" ", @"About", nil];
+    actionSheetPinOptions = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"SHARE PINS:", @"For Selected Tags", @"Selected Pins", @" ", @"About", nil];
     
     [actionSheetPinOptions showInView:self.view];
 
@@ -801,7 +800,7 @@
         rtn = @"\n";
     }
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Exporting Locations For Selected Tags:" message:str delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Exporting Pins For Selected Tags:" message:str delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
     [alert show];
     
     // create archive file and active activity view / share screen
@@ -827,7 +826,7 @@
     // if no selected pins, notify user and exit
     if([selectedPins count]==0){
         
-        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Please make selection:" message:@"Before exporting data, please select the locations you would like to share." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Please make selection:" message:@"Before exporting data, please select the pins you would like to share." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
         [alert show];
         
     }else{
@@ -842,7 +841,7 @@
             rtn = @"\n";
         }
         
-        UIAlertView *alert2 = [[UIAlertView alloc] initWithTitle:@"Exporting Selected Locations:" message:str delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        UIAlertView *alert2 = [[UIAlertView alloc] initWithTitle:@"Exporting Selected Pins:" message:str delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
         [alert2 show];
         
         // create archive file and active activity view / share screen
@@ -1419,7 +1418,7 @@
     // if there are no locations
     if([listOfFilteredLocations count] == 0) {
         
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:@"There are currently no locations to tour.  Please adjust your filters." delegate:self cancelButtonTitle:nil otherButtonTitles:nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:@"There are currently no pins to tour.  Please adjust your filters." delegate:self cancelButtonTitle:nil otherButtonTitles:nil];
         [alert show];
         return;
     }

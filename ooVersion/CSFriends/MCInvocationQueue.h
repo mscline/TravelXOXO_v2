@@ -14,6 +14,8 @@
 
 // The Invocation: The concept of messages is central to the objective-c philosophy. Any time you call a method, or access a variable of some object, you are sending it a message. NSInvocation comes in handy when you want to send a message to an object at a different point in time, or send the same message several times. NSInvocation allows you to describe the message you are going to send, and then invoke it (actually send it to the target object) later on.
 
+// I decided to use invocations, rather than selectors, because I don't like compiler warnings (the compiler can't check it if you are going to generate a selector dynamically from a string), being able to reuse an invocation is cool, and I was having a problem passing nil values into the method the selector was calling.  (It returns the pointer to the object, not an ideal situation.)
+
 @interface MCInvocationQueue : NSObject
 
 
@@ -33,7 +35,7 @@
         // Misc: use to work with commands manually (use eg, if want to get a copy of an invocation)
         -(id)returnNextCommand;
         -(void)removeNextCommand;
-        -(void)addCustomInvocation:(NSInvocation *)invocation;
+        -(void)addCustomInvocation:(NSInvocation *)invocation;  // ie, make your own and use this method to add to queue
 
         // Related Methods/Variants
         -(void)addSelectorToQueue:(SEL)selector fromController:(id)controller;
